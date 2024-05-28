@@ -34,7 +34,7 @@
         <ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{url_for('appPage')}}">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <img src="/static/images/FreeMarx.png" style="width:50px; height:50px; border-radius:5px;">
                 </div>
@@ -45,20 +45,20 @@
             <hr class="sidebar-divider my-0">
 
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{url_for('appPage')}}">
                     <i class="fi fi-rr-chart-histogram"></i>
                     <span>Market</span></a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="portfolio.html">
+                <a class="nav-link" href="{{url_for('portfolio')}}">
                     <i class="fi fi-rr-briefcase"></i>
                     <span>Portfilio</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="wallet.html">
+                <a class="nav-link" href="{{url_for('wallet')}}">
                     <i class="fi fi-rr-wallet"></i>
                     <span>Wallet</span>
                 </a>
@@ -73,7 +73,7 @@
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="account.html">
+                <a class="nav-link" href="{{url_for('account')}}">
                     <i class="fi fi-rr-circle-user"></i>
                     <span>Account</span></a>
             </li>
