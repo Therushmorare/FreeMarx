@@ -25,3 +25,7 @@ def portfolio():
 @app.route('/wallet')
 def wallet():
     return render_template('wallet.html')
+
+app.static_folder = 'static'
+if __name__ == "__main":
+    app.run(host='0.0.0.0',port = 5000, debug = True)
