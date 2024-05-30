@@ -4,6 +4,7 @@ from flask import Flask, render_template, redirect, url_for
 from models.company import Company
 from models.investors import Investor
 from database import db
+from api.key_gen import uni_key_gen
 '''
 sign up functionality
 '''
@@ -16,7 +17,8 @@ def company_signup(email, password):
         return render_template('error.html', err='This company already exists')
     else:
         #add info into database
-        add_company = Company(email = email, password = password)
+        user_id = str(uni_key_gen(email))
+        add_company = Company(id = user_id, email = email, password = password)
         db.session.add(add_company)
         db.session.commit()
         return redirect(url_for('companySteps', id = add_company.id))
@@ -30,7 +32,8 @@ def investor_signup(first_name, last_name, email, password):
         return render_template('error.html', err='User with that email already exists!')
     else:
         #add to db
-        add_investor = Investor(first_name = first_name, last_name = last_name, email = email, password = password)
+        user_id = str(uni_key_gen(email))
+        add_investor = Investor(id = user_id, first_name = first_name, last_name = last_name, email = email, password = password)
         db.session.add(add_investor)
         db.session.commit()
         return redirect(url_for('investorProfileCreate', id = add_investor.id))
