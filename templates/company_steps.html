@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FreeMarx</title>
+  <link rel="stylesheet" href="/static/styles/steps.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <body>
+        <div class="container">
+            <header>Company Details</header>
+            <div class="progress-bar">
+                <div class="step">
+                    <p>Logo</p>
+                    <div class="bullet">
+                        <span>1</span>
+                    </div>
+                    <div class="check fas fa-check"></div>
+                </div>
+                <div class="step">
+                    <p>Info</p>
+                    <div class="bullet">
+                        <span>2</span>
+                    </div>
+                    <div class="check fas fa-check"></div>
+                </div>
+                <div class="step">
+                    <p>Founders</p>
+                    <div class="bullet">
+                        <span>3</span>
+                    </div>
+                    <div class="check fas fa-check"></div>
+                </div>
+                <div class="step">
+                    <p>Address</p>
+                    <div class="bullet">
+                        <span>4</span>
+                    </div>
+                    <div class="check fas fa-check"></div>
+                </div>
+                <div class="step">
+                    <p>Equity</p>
+                    <div class="bullet">
+                        <span>5</span>
+                    </div>
+                    <div class="check fas fa-check"></div>
+                </div>
+                <div class="step">
+                    <p>Submit</p>
+                    <div class="bullet">
+                        <span>6</span>
+                    </div>
+                    <div class="check fas fa-check"></div>
+                </div>
+            </div>
+            <div class="form-outer">
+                <form action="#">
+                    <div class="page slide-page">
+                        <div class="title">Basic Info:</div>
+                        <div class="field">
+                            <div class="label">Company Logo</div>
+                            <input type="file" required style="line-height:40px;"/>
+                        </div>
+                        <div class="field">
+                            <div class="label">Company Name</div>
+                            <input type="text" required />
+                        </div>
+
+                        <div class="field">
+                            <button class="firstNext next">Next</button>
+                        </div>
+                    </div>
+
+                    <div class="page">
+                        <div class="title">Company Info:</div>
+                        <div class="field">
+                            <div class="label">Sector</div>
+                            <input type="text" required />
+                        </div>
+                        <div class="field">
+                            <div class="label">Industry</div>
+                            <input type="text" required />
+                        </div>
+                        <div class="field">
+                            <div class="label">Number of Employees</div>
+                            <input type="Number" required />
+                        </div>
+                        <div class="field">
+                            <div class="label">Company Details</div>
+                            <textarea style="width:100%;">Our company is a...</textarea>
+                        </div>
+
+
+                        <div class="field btns">
+                            <button class="prev-1 prev">Previous</button>
+                            <button class="next-1 next">Next</button>
+                        </div>
+                    </div>
+                    <div class="page">
+                        <div class="title">Founder's Info:</div>
+                        <div class="field">
+                            <div class="label">Upload founder's doc</div>
+                            <input type="file" required style="line-height:40px;"/>
+                        </div>
+                        <div class="field btns">
+                            <button class="prev-2 prev">Previous</button>
+                            <button class="next-2 next">Next</button>
+                        </div>
+                    </div>
+                    <div class="page">
+                        <div class="title">Company Address:</div>
+                        <div class="field">
+                            <div class="label">Location</div>
+                            <input type="text" required />
+                        </div>
+                        <div class="field btns">
+                            <button class="prev-3 prev">Previous</button>
+                            <button class="next-3 next">Next</button>
+                        </div>
+                    </div>
+
+                    <div class="page">
+                        <div class="title">Equity:</div>
+                        <div class="field">
+                            <div class="label">Equity Type</div>
+                            <input type="text" required />
+                        </div>
+                        <div class="field">
+                            <div class="label">Equity Number</div>
+                            <input type="number" required/>
+                        </div>
+                        <div class="field">
+                            <div class="label">Financial Goal</div>
+                            <input type="number" required/>
+                        </div>
+                        <div class="field btns">
+                            <button class="prev-4 prev">Previous</button>
+                            <button class="next-4 next">Next</button>
+                        </div>
+                    </div>
+
+                    <div class="page">
+                        <div class="title">Financial Statements:</div>
+                        <div class="field">
+                            <div class="label">Upload Financials</div>
+                            <input type="file" required style="line-height:40px;"/>
+                        </div>
+                        <div class="field btns">
+                            <button class="prev-5 prev">Previous</button>
+                            <button class="submit">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script src="/static/js/steps.js"></script>
+    </body>
+</html>
