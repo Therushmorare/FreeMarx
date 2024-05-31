@@ -13,3 +13,6 @@ SQLAlchemy
 typing_extensions
 Werkzeug
 greenlet
+psycopg2
+psycopg2_binary
+python-dotenv
