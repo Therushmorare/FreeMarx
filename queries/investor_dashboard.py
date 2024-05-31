@@ -37,7 +37,7 @@ def wallet_info(id, db):
     result = Wallet.query.filter_by(investor_id = id).all()
     return result
 
-def portfolio(id, db):
+def port_data(id, db):
     result = Portfolio.query.filter_by(investor_id = id).all()
     return result
 

@@ -12,10 +12,10 @@ from database import db
 selling of stocks
 '''
 
-def sell_stocks(receipt_id, investor_id, type, quantity):
+def sell_stocks(receipt_id, investor_id, company_id, quantity):
     #get company data
-    portfolio_data = Portfolio.filter_by(investor_id = investor_id, receipt_id = receipt_id).first()
-    stock_data = EquityInfo.query.filter_by(company_id = portfolio_data.company_id, type = type).first()
+    portfolio_data = Portfolio.query.filter_by(receipt_id = receipt_id).first()
+    stock_data = EquityInfo.query.filter_by(company_id = portfolio_data.company_id).first()
     wallet_data = Wallet.query.filter_by(investor_id = investor_id).first()
     sell_id = uuid.uuid1()
 

@@ -34,7 +34,7 @@
         <ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{url_for('appPage')}}">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{url_for('investorDashboard', id = user_id)}}">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <img src="/static/images/FreeMarx.png" style="width:50px; height:50px; border-radius:5px;">
                 </div>
@@ -45,20 +45,20 @@
             <hr class="sidebar-divider my-0">
 
             <li class="nav-item active">
-                <a class="nav-link" href="{{url_for('appPage')}}">
+                <a class="nav-link" href="{{url_for('investorDashboard', id = user_id)}}">
                     <i class="fi fi-rr-chart-histogram"></i>
                     <span>Market</span></a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="{{url_for('portfolio')}}">
+                <a class="nav-link" href="{{url_for('portfolio', id = user_id)}}">
                     <i class="fi fi-rr-briefcase"></i>
                     <span>Portfilio</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="{{url_for('wallet')}}">
+                <a class="nav-link" href="{{url_for('wallet', id = user_id)}}">
                     <i class="fi fi-rr-wallet"></i>
                     <span>Wallet</span>
                 </a>
@@ -73,20 +73,20 @@
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="{{url_for('account')}}">
+                <a class="nav-link" href="{{url_for('account', id = user_id)}}">
                     <i class="fi fi-rr-circle-user"></i>
                     <span>Account</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{url_for('investorLogout')}}">
                     <i class="fi fi-rr-lock-open-alt"></i>
                     <span>Logout</span></a>
             </li>
         </ul>
         <!-- End of Sidebar -->
-
+        
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
 

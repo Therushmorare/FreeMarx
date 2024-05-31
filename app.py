@@ -21,7 +21,8 @@ from api.create_investor_profile import profile, investorP
 from api.company_steps import company_profile
 from api.wallet import balance_create, top_up
 from queries.investor_dashboard import *
-from api.share import share_value, buyers_sentiment, sellers_sentiment
+from api.buy import buy_stocks
+from api.sell import sell_stocks
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -79,10 +80,8 @@ def investorDashboard(id):
     info = company_info(db)
     info2 = company_info(db)
     shares = equities(db)
-    buyers = buys(db)
-    sellers = sells(db)
-    all_vesters = investors(db)
-    return render_template('index.html', user_id = user_id, info = info, info2 = info2, entities = entities, shares = shares, buyers = buyers, sellers = sellers, all_vesters = all_vesters)
+    my_summary = port_data(user_id, db)
+    return render_template('index.html', user_id = user_id, info = info, info2 = info2, entities = entities, shares = shares, my_summary = my_summary)
 
 @app.route('/companySteps/<string:id>')
 def companySteps(id):
@@ -94,21 +93,38 @@ def companyDashboard(id):
     user_id = id
     return render_template('company_dashboard.html', user_id = user_id)
 
-@app.route('/account')
-def account():
-    return render_template('account.html')
+@app.route('/buyPage/<string:id>/<string:cid>')
+def buyPage(id, cid):
+    investor_id = id
+    company_id = cid
+    return render_template('buy.html', investor_id = investor_id, company_id = company_id)
 
-@app.route('/view')
-def view():
-    return render_template('company_page.html')
+@app.route('/sellPage/<string:id>/<string:rid>/<string:cid>')
+def sellPage(id, rid, cid):
+    investor_id = id
+    receipt_id = rid
+    company_id = cid
+    return render_template('sell.html', investor_id = investor_id, receipt_id = receipt_id, company_id = company_id)
 
-@app.route('/portfolio')
-def portfolio():
-    return render_template('portfolio.html')
+@app.route('/account/<string:id>')
+def account(id):
+    user_id = id
+    return render_template('account.html', user_id = user_id)
 
-@app.route('/wallet')
-def wallet():
-    return render_template('wallet.html')
+@app.route('/view/<string:id>')
+def view(id):
+    user_id = id
+    return render_template('company_page.html', user_id = user_id)
+
+@app.route('/portfolio/<string:id>')
+def portfolio(id):
+    user_id = id
+    return render_template('portfolio.html', user_id = user_id)
+
+@app.route('/wallet/<string:id>')
+def wallet(id):
+    user_id = id
+    return render_template('wallet.html', user_id = user_id)
 
 #login functionality
 @app.route('/investorLoginFunction', methods=('GET', 'POST'))
@@ -258,6 +274,7 @@ def companyProfileSteps(id):
             return render_template('errors.html', err='Could not load page')
     return redirect(url_for('companyProfileSteps', id = id))
 
+#add money to wallet
 @app.route('/addToWallet/<string:id>', methods=('GET', 'POST'))
 def addToWallet(id):
     if request.method == "POST":
@@ -270,6 +287,33 @@ def addToWallet(id):
         except OperationalError:
             return render_template('errors.html', err='Could not load page')
     return redirect(url_for('addToWallet', id = id))
+
+#buy shares
+@app.route('/buyShare/<string:id>/<string:cid>', methods=('GET', 'POST'))
+def buyShare(id, cid):
+    if request.method == "POST":
+        try:
+            share_type = 'ordinary shares'
+            quantity = request.form.get('quantity')
+            result = buy_stocks(cid, id, share_type, quantity)
+            if result:
+                return result
+        except OperationalError:
+            return render_template('errors.html', err='Could not load page')
+    return redirect(url_for('investorDashboard', id = id))
+
+#sell shares
+@app.route('/sellShare/<string:id>/<string:rid>/<string:cid>', methods=('GET', 'POST'))
+def sellShare(id, rid, cid):
+    if request.method == "POST":
+        try:
+            quantity = request.form.get('quantity')
+            result = sell_stocks(rid, id, cid, quantity)
+            if result:
+                return result
+        except OperationalError:
+            return render_template('errors.html', err='Could not load page')
+    return redirect(url_for('investorDashboard', id = id))
 
 app.static_folder = 'static'
 if __name__ == "__main":

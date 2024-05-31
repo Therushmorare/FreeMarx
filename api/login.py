@@ -10,8 +10,8 @@ login functionality
 
 def login(user_email, password):
     #check if user exists in db
-    company_user = Company.query.filter_by(email = user_email, password = password).first()
-    investor_user = Investor.query.filter_by(email = user_email, password = password).first()
+    company_user = Company.query.filter_by(email = user_email).first()
+    investor_user = Investor.query.filter_by(email = user_email).first()
     #check company user
     if company_user:
         return redirect(url_for('companyDashboard', id = company_user.id))
