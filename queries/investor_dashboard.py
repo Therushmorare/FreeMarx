@@ -17,20 +17,24 @@ from models.equities import EquityInfo
 from models.buy import Buys
 from models.sell import Sells
 
-def companies(db):
+def companies_i(db):
     result = Company.query.all()
     return result
 
-def company_info(db):
+def company_info_i(db):
     result = CompanyBasicInfo.query.all()
     return result
 
-def company_info_two(db):
+def company_info_two_i(db):
     result = CompanyAdvancedInfo.query.all()
     return result
 
 def investor_info(id, db):
     result = Investor.query.filter_by(id = id).all()
+    return result
+
+def investor_profile_info(id, db):
+    result = InvestorProfile.query.filter_by(investor_id = id).all()
     return result
 
 def wallet_info(id, db):
@@ -41,16 +45,24 @@ def port_data(id, db):
     result = Portfolio.query.filter_by(investor_id = id).all()
     return result
 
+def port_data_two(db):
+    result = Portfolio.query.all()
+    return result
+
 def profile(id, db):
     result = InvestorProfile.query.filter_by(investor_id = id).all()
     return result
 
-def equities(db):
+def equities_i(db):
     result = EquityInfo.query.all()
     return result
 
 def buys(db):
     result = Buys.query.count()
+    return result
+
+def buys_two(id, db):
+    result = Buys.query.filter_by(investor_id = id).all()
     return result
 
 def sells(db):
@@ -59,4 +71,8 @@ def sells(db):
 
 def investors(db):
     result = Investor.query.count()
+    return result
+
+def topupdata(id, db):
+    result = WalletTopUp.query.filter_by(investor_id = id).all()
     return result

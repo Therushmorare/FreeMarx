@@ -38,4 +38,4 @@ def buy_stocks(company_id, investor_id, type, quantity):
         #update company share count
         stock_data.number_of_shares = stock_data.number_of_shares - float(quantity)
         db.session.commit()
-        return render_template('errors.html', message = 'Thank you for your purchase')
+        return render_template('success.html', message = 'Thank you for your purchase', user_id = investor_id)

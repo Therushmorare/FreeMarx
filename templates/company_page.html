@@ -159,54 +159,74 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-12">
+                            {% for basic in basic_info %}
                             <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                                <h1 class="h3 mb-0 text-gray-800"><img src="/static/images/084858e17760cdcf8eccb77c6554f978.jpg" style="width:50px; height:50px; border-radius:5px;">&nbsp;
-                                    Microsoft Inc.</h1>
+                                <h1 class="h3 mb-0 text-gray-800"><img src="/static/Portfolio/{{basic.logo}}" style="width:50px; height:50px; border-radius:5px;">&nbsp;
+                                    {{basic.name}}.</h1>
                             </div>
+                            {% endfor %}
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h3><b>R 860.00, per share</b></h3>
+                                    {% for eq in equity %}
+                                    <h3><b>R {{eq.goal}}, per share</b></h3>
+                                    {% endfor %}
                                     <hr />
                                     <div>
                                         <canvas id="myChart"></canvas>
                                     </div>
                                     <br />
                                     <div class="col-md-12">
-                                        <button class="btn btn-outline-success" style="border-radius:20px; width:100%;" data-bs-toggle="modal" data-bs-target="#buyModal">Trade MSFT</button>
+                                        <button class="btn btn-outline-success" style="border-radius:20px; width:100%;" data-bs-toggle="modal" data-bs-target="#buyModal{{user_id}}">Trade MSFT</button>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <h3>COMPANY PROFILE</h3>
                                     <h5>Company Info</h5>
-                                    <p>Sector: Technology Services</p>
-                                    <p>Industry: Packaged Software</p>
-                                    <p>Employees(FY): 221000</p>
-                                    <p>Microsoft Corporation is an American multinational corporation and technology company headquartered in Redmond, Washington.[2] Microsoft's best-known software products are the Windows line of operating systems, the Microsoft 365 suite of productivity applications, and the Edge web browser. Its flagship hardware products are the Xbox video game consoles and the Microsoft Surface lineup of touchscreen personal computers. Microsoft ranked No. 14 in the 2022 Fortune 500 rankings of the largest United States corporations by total revenue;[3] and it was the world's largest software maker by revenue in 2022 according to Forbes Global 2000. It is considered one of the Big Five American information technology companies, alongside Alphabet (parent company of Google), Amazon, Apple, and Meta (parent company of Facebook). </p>
+                                    {% for info in advanced_info %}
+                                    <p>Sector: {{info.sector}}</p>
+                                    <p>Industry: {{info.industry}}</p>
+                                    <p>Employees(FY): {{info.employees}}</p>
+                                    <p>{{info.details}}</p>
+                                    {% endfor %}
                                     <br />
                                     <h5>Founders</h5>
                                     <ul class="list-group list-group-flush">
                                         <li class="list-group-item">
                                             <div class="row">
                                                 <div class="col-4">
-                                                    <img src="/static/images/linkdin.jpg" style="width:50px; height:50px">
+                                                    <i class="fi fi-rr-users-alt" style="font-size:30px;"></i>
                                                 </div>
-                                                <div class="col-8">
-                                                    <h6> Bill Gates</h6>
+                                                {% for founder in founder_info %}
+                                                <div class="col-4">
+                                                        {{founder.document}}
                                                 </div>
+                                                <div class="col-4">
+                                                    <a href="/static/Founder/{{founder.document}}" style="text-decoration: none;" download>
+                                                    <button class="btn btn-outline-primary">download</button>
+                                                    </a>
+                                                </div>
+                                                {% endfor %}
                                             </div>
                                         </li>
+                                      </ul>
+                                    <h5>Financial Statements</h5>
+                                    <ul class="list-group list-group-flush">
                                         <li class="list-group-item">
                                             <div class="row">
                                                 <div class="col-4">
-                                                    <img src="/static/images/linkdin.jpg" style="width:50px; height:50px">
+                                                    <i class="fi fi-rr-file-spreadsheet" style="font-size:30px;"></i>
                                                 </div>
-                                                <div class="col-8">
-                                                    <h6>Paul Allen </h6>
+                                                {% for statement in statements %}
+                                                <div class="col-4">
+                                                        {{statement.document}}
                                                 </div>
+                                                <div class="col-4">
+                                                    <a href="/static/financials/{{statement.document}}" style="text-decoration: none;" download>
+                                                    <button class="btn btn-outline-primary">download</button>
+                                                    </a>
+                                                </div>
+                                                {% endfor %}
                                             </div>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <h6>Founded on <b>April 4, 1975</b></h6>
                                         </li>
                                       </ul>
                                 </div>
@@ -214,24 +234,38 @@
                         </div>
                     </div>
                 </div>
+                <div class="hidden_content">
+                    {% for total_eq in equity %}
+                    <input type="hidden" id="equity" value="{{total_eq.number_of_shares}}">
+                    {% endfor %}
+
+                    {% for buy in all_buys %}
+                    <input type="hidden" id="buyers" value="{{buy.share_quantity}}">
+                    {% endfor %}
+
+                    {% for sell in all_sells %}
+                    <input type="hidden" id="sells" value="{{sell.share_quantity}}">
+                    {% endfor %}
+                </div>
                 <!-- End of Main Content -->
 
                 <!-- buy modal -->
-                <!-- Modal -->
-                <div class="modal fade" id="buyModal" tabindex="-1" aria-labelledby="buyModalLabel" aria-hidden="true">
+                <div class="modal fade" id="buyModal{{user_id}}" tabindex="-1" aria-labelledby="buyModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Buy</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
+                        <form method="POST" action="{{url_for('buyShare', id = user_id, cid = company_id)}}">
                         <div class="modal-body">
                         <div class="form-floating mb-3">
-                            <input type="number" class="form-control" id="floatingInput" placeholder="Number of shares">
+                            <input type="number" name="quantity" class="form-control" id="floatingInput" placeholder="Number of shares">
                             <label for="floatingInput">Quantity</label>
                         </div>
-                        <button class="btn btn-success" style="width:100%;">Buy</button>
+                        <button type="submit" class="btn btn-success" style="width:100%;">Buy</button>
                         </div>
+                        </form>
                     </div>
                     </div>
                 </div>
@@ -255,28 +289,9 @@
 
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
+        <i class="fi fi-rr-arrow-up"></i>
     </a>
 
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
@@ -297,15 +312,20 @@
     <script>
         const ctx = document.getElementById('myChart');
         const ct = document.getElementById('myChart2');
-
+        var equity = document.getElementById('equity');
+        var sales = document.getElementById('sells');
+        var buys = document.getElementById('buyers');
+        total_equity = equity.value;
+        total_sales = sales.value;
+        total_buys = buys.value;
 
         new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            labels: ['Share Quantity', 'Sells', 'Buys'],
             datasets: [{
-            label: 'MSFT',
-            data: [200, 300, 400, 500, 600, 610, 620, 710, 300, 800, 811, 860],
+            label: 'Chart Data',
+            data: [total_equity, total_sales, total_buys],
             borderWidth: 1,
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',

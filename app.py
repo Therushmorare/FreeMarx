@@ -23,6 +23,7 @@ from api.wallet import balance_create, top_up
 from queries.investor_dashboard import *
 from api.buy import buy_stocks
 from api.sell import sell_stocks
+from queries.company_dashboard import *
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -76,12 +77,15 @@ def balanceManagement(id):
 @app.route('/investorDashboard/<string:id>')
 def investorDashboard(id):
     user_id = id
-    entities = companies(db)
-    info = company_info(db)
-    info2 = company_info(db)
-    shares = equities(db)
+    entities = companies_i(db)
+    info = company_info_i(db)
+    info2 = company_info_i(db)
+    shares = equities_i(db)
     my_summary = port_data(user_id, db)
-    return render_template('index.html', user_id = user_id, info = info, info2 = info2, entities = entities, shares = shares, my_summary = my_summary)
+    my_info = investor_info(user_id, db)
+    my_profile = investor_profile_info(user_id, db)
+
+    return render_template('index.html', user_id = user_id, info = info, info2 = info2, entities = entities, shares = shares, my_summary = my_summary, my_info = my_info, my_profile = my_profile)
 
 @app.route('/companySteps/<string:id>')
 def companySteps(id):
@@ -109,22 +113,44 @@ def sellPage(id, rid, cid):
 @app.route('/account/<string:id>')
 def account(id):
     user_id = id
-    return render_template('account.html', user_id = user_id)
+    my_info = investor_info(user_id, db)
+    my_profile = investor_profile_info(user_id, db)
+    return render_template('account.html', user_id = user_id, my_info = my_info, my_profile = my_profile)
 
-@app.route('/view/<string:id>')
-def view(id):
+@app.route('/view/<string:id>/<string:cid>')
+def view(id, cid):
     user_id = id
-    return render_template('company_page.html', user_id = user_id)
+    company_id = cid
+    my_info = companies(company_id, db)
+    basic_info = company_info(company_id, db)
+    advanced_info = company_info_two(company_id, db)
+    equity = equities(company_id, db)
+    founder_info = founders(company_id, db)
+    statements = financials(company_id, db)
+    all_buys = buyers(company_id, db)
+    all_sells = sellers(company_id, db)
+    return render_template('company_page.html', user_id = user_id, company_id = company_id, my_info = my_info, basic_info = basic_info, advanced_info = advanced_info, equity = equity, founder_info = founder_info, statements = statements, all_buys = all_buys, all_sells = all_sells)
 
 @app.route('/portfolio/<string:id>')
 def portfolio(id):
     user_id = id
-    return render_template('portfolio.html', user_id = user_id)
+    portfolio_data = port_data_two(db)
+    company_info1 = company_info_i(db)
+    company_info2 = company_info_two_i(db)
+    my_wallet = wallet_info(user_id, db)
+    my_info = investor_info(user_id, db)
+    my_profile = investor_profile_info(user_id, db)
+    return render_template('portfolio.html', user_id = user_id, portfolio_data = portfolio_data, company_info1 = company_info1, company_info2 = company_info2, my_wallet = my_wallet, my_info = my_info, my_profile = my_profile)
 
 @app.route('/wallet/<string:id>')
 def wallet(id):
     user_id = id
-    return render_template('wallet.html', user_id = user_id)
+    my_wallet = wallet_info(user_id, db)
+    purchases = buys_two(user_id, db)
+    debits = topupdata(user_id, db)
+    my_info = investor_info(user_id, db)
+    my_profile = investor_profile_info(user_id, db)
+    return render_template('wallet.html', user_id = user_id, my_wallet = my_wallet, purchases = purchases, debits = debits, my_info = my_info, my_profile = my_profile)
 
 #login functionality
 @app.route('/investorLoginFunction', methods=('GET', 'POST'))
@@ -140,9 +166,8 @@ def investorLoginFunction():
                 return render_template('errors.html', err='User does not exist!')
             elif bcrypt.check_password_hash(user.password, passwordText) is False:
                 return render_template('errors.html', err='Password is incorrect!')
-            result = login(emailText, passwordText)
-            if result:
-                return result
+            else:
+                return redirect(url_for('investorDashboard', id = user.id))
         except OperationalError:
             return render_template('errors.html', err='There was a server error')
     return render_template('login.html')
@@ -160,9 +185,8 @@ def companyLoginFunction():
                 return render_template('errors.html', err='User does not exist!')
             elif bcrypt.check_password_hash(user.password, passwordText) is False:
                 return render_template('errors.html', err='Password is incorrect!')
-            result = login(emailText, passwordText)
-            if result:
-                return result
+            else:
+                return redirect(url_for('companyDashboard', id = user.id))
         except OperationalError:
             return render_template('errors.html', err='There was a server error')
     return render_template('company_login.html')
@@ -314,6 +338,20 @@ def sellShare(id, rid, cid):
         except OperationalError:
             return render_template('errors.html', err='Could not load page')
     return redirect(url_for('investorDashboard', id = id))
+
+#account top up
+@app.route('/accountTopUp/<string:id>', methods=('GET', 'POST'))
+def accountTopUp(id):
+    if request.method == 'POST':
+        try:
+            type = request.form.get('type')
+            amount = request.form.get('amount')
+            result = top_up(type,amount, id)
+            if result:
+                return result
+        except OperationalError:
+            return render_template('errors.html', err='Could not load page')
+    return redirect(url_for('wallet', id=id))
 
 app.static_folder = 'static'
 if __name__ == "__main":

@@ -51,10 +51,12 @@
         </div>
         <br />
         <button type="submit" class="btn btn-outline-dark" style="width:100%;">Buy now!</button>
-        <button class="btn btn" onclick="history.back()">back</button>
     </div>
 </div>
 </form>
+<a href="{{url_for('investorDashboard', id = investor_id)}}" style="text-decoration: none;">
+<button class="btn btn">back</button>
+</a>
 </center>
 </div>
 </body>

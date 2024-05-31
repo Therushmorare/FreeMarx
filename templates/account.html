@@ -34,7 +34,7 @@
         <ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{url_for('appPage')}}">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{url_for('investorDashboard', id = user_id)}}">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <img src="/static/images/FreeMarx.png" style="width:50px; height:50px; border-radius:5px;">
                 </div>
@@ -45,20 +45,20 @@
             <hr class="sidebar-divider my-0">
 
             <li class="nav-item active">
-                <a class="nav-link" href="{{url_for('appPage')}}">
+                <a class="nav-link" href="{{url_for('investorDashboard', id = user_id)}}">
                     <i class="fi fi-rr-chart-histogram"></i>
                     <span>Market</span></a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="{{url_for('portfolio')}}">
+                <a class="nav-link" href="{{url_for('portfolio', id = user_id)}}">
                     <i class="fi fi-rr-briefcase"></i>
                     <span>Portfilio</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="{{url_for('wallet')}}">
+                <a class="nav-link" href="{{url_for('wallet', id = user_id)}}">
                     <i class="fi fi-rr-wallet"></i>
                     <span>Wallet</span>
                 </a>
@@ -73,14 +73,14 @@
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="{{url_for('account')}}">
+                <a class="nav-link" href="{{url_for('account', id = user_id)}}">
                     <i class="fi fi-rr-circle-user"></i>
                     <span>Account</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{url_for('investorLogout')}}">
                     <i class="fi fi-rr-lock-open-alt"></i>
                     <span>Logout</span></a>
             </li>
@@ -146,10 +146,14 @@
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Nathaniel</span>
-                                <img class="img-profile rounded-circle" src="/static/images/user(1).png">
+                            {% for info in my_info %}
+                            {% for image in my_profile %}
+                            <a class="nav-link" href="{{url_for('account', id = user_id)}}">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{info.first_name}}</span>
+                                <img class="img-profile rounded-circle" src="/static/Profiles/{{image.file}}">
                             </a>
+                            {% endfor %}
+                            {% endfor %}
                         </li>
                     </ul>
                 </nav>
@@ -164,46 +168,50 @@
                     <div class="row">
                         <div class="col-xl-8 col-lg-7">
                             <center>
-                                <img src="/static/images/user(1).png" style="width:300px; height:300px; border-radius:5px;">
+                                {% for image in my_profile %}
+                                <img src="/static/Profiles/{{image.file}}" style="width:300px; height:300px; border-radius:5px;">
                                 <br /><br />
                                     <input type="file" class="form-control" id="floatingPassword" placeholder="file name">
                                 <br />
                                 <button class="btn btn-dark" style="width:100%;">update</button>
+                                {% endfor %}
                             </center>
                         </div>
                         <div class="col-xl-4 col-lg-5">
                             <div class="card">
+                                {% for info in my_info %}
                                 <div class="card-body">
                                 <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="floatingInput" placeholder="first name">
+                                    <input type="text" class="form-control" id="floatingInput" value="{{info.first_name}}">
                                     <label for="floatingInput">First Name</label>
                                 </div>
                                 <button class="btn btn-outline-dark">update</button>
                                 <hr />
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="floatingPassword" placeholder="last name">
+                                    <input type="text" class="form-control" id="floatingPassword" value="{{info.last_name}}">
                                     <label for="floatingPassword">Last Name</label>
                                 </div>
                                 <br />
                                 <button class="btn btn-outline-dark">update</button>
                                 <hr />
                                 <div class="form-floating">
-                                    <input type="email" class="form-control" id="floatingPassword" placeholder="email">
+                                    <input type="email" class="form-control" id="floatingPassword" value="{{info.email}}">
                                     <label for="floatingPassword">Email</label>
                                 </div>
                                 <br />
                                 <button class="btn btn-outline-dark">update</button>
                                 <hr />
+                                {% for info_two in my_profile %}
                                 <div class="form-floating">
-                                    <textarea class="form-control" placeholder="your description" id="floatingTextarea2" style="height: 100px"></textarea>
+                                    <textarea class="form-control" placeholder="your description" id="floatingTextarea2" style="height: 100px">{{info_two.bio}}</textarea>
                                     <label for="floatingTextarea2">Description</label>
                                 </div>
+                                {% endfor %}
                                 <br />
                                 <button class="btn btn-outline-dark">update</button>
                                 <hr />
-    
-
                                 </div>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
@@ -221,41 +229,6 @@
 
         </div>
         <!-- End of Content Wrapper -->
-        <!-- view portfolio modal -->
-        <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Microsoft Inc.</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                <div class="row">
-                    <div class="col-4">Shares</div>
-                    <div class="col-8">40</div>
-                </div>
-                <div class="row">
-                    <div class="col-4">Amount</div>
-                    <div class="col-8">R34 400,00</div>
-                </div>
-                <div class="row">
-                    <div class="col-4">Date</div>
-                    <div class="col-8">12/05/2024</div>
-                </div>
-                <div class="row">
-                    <div class="col-6">
-                        <button class="btn btn-outline-success" style="width:100%; border-radius:20px;">Buy more</button>
-                    </div>
-                    <div class="col-6">
-                        <button class="btn btn-outline-danger" style="width:100%; border-radius:20px;">Sell</button>
-                    </div>
-                </div>
-                <hr />
-                <h3>Your share certificate, <b>microsoft.pdf</b></h3>
-                </div>
-            </div>
-            </div>
-        </div>
     </div>
     <!-- End of Page Wrapper -->
 

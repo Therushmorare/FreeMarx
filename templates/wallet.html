@@ -146,10 +146,14 @@
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Nathaniel</span>
-                                <img class="img-profile rounded-circle" src="/static/images/user(1).png">
+                            {% for info in my_info %}
+                            {% for image in my_profile %}
+                            <a class="nav-link" href="{{url_for('account', id = user_id)}}">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{info.first_name}}</span>
+                                <img class="img-profile rounded-circle" src="/static/Profiles/{{image.file}}">
                             </a>
+                            {% endfor %}
+                            {% endfor %}
                         </li>
                     </ul>
                 </nav>
@@ -158,20 +162,63 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Portfolio</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Wallet</h1>
                     </div>
 
                     <div class="row">
                         <div class="col-xl-8 col-lg-7">
                             <div class="card">
+                                {% if my_wallet | length != 0 %}
+                                {% for balance in my_wallet %}
                                 <div class="card-body">
                                     <i class="fi fi-rr-wallet" style="font-size:50px;"></i>
                                     <h1><b>Balance</b></h1>
-                                    <h2><b>R 40,000.00</b></h2>
+                                    <h2><b>R {{(balance.amount * -1|int)}}</b></h2>
+                                    <p>This your wallet, the balance available is what you'll use to buy your shares</p>
+                                    <br />
+                                    <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#topUpModal{{balance.id}}">Top up balance</button>
+                                </div>
+                                <!-- view portfolio modal -->
+                                <div class="modal fade" id="topUpModal{{balance.id}}" tabindex="-1" aria-labelledby="topUpModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Account top up</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form method="POST" action="{{url_for('accountTopUp', id=user_id)}}">
+                                        <div class="modal-body">
+                                            <div class="form-floating">
+                                                <select name="type" class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                                                <option value="account" selected>account</option>
+                                                <option value="savings">savings</option>
+                                                </select>
+                                                <label for="floatingSelect">Description</label>
+                                            </div>
+                                            <br />
+                                            <div class="form-floating mb-3">
+                                                <input type="number" name="amount" class="form-control" id="floatingInput" placeholder="R0.00">
+                                                <label for="floatingInput">Amount</label>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-dark">Add</button>
+                                        </div>
+                                        </form>
+                                    </div>
+                                    </div>
+                                </div>
+
+                                {% endfor %}
+                                {% else %}
+                                <div class="card-body">
+                                    <i class="fi fi-rr-wallet" style="font-size:50px;"></i>
+                                    <h1><b>Balance</b></h1>
+                                    <h2><b>R 0.00</b></h2>
                                     <p>This your wallet, the balance available is what you'll use to buy your shares</p>
                                     <br />
                                     <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#topUpModal">Top up balance</button>
                                 </div>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="col-xl-4 col-lg-5">
@@ -180,35 +227,71 @@
                                     <div class="scroll">
                                         <h3>Top up's</h3>
                                         <ul class="list-group list-group-flush">
+                                            {% if debits | length != 0 %}
+                                            {% for debit in debits %}
+                                            <li class="list-group-item">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <h5>{{debit.type}}</h5>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <h5>{{debit.added_at}}</h5>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <h5 style="color:green">+R{{debit.amount}}</h5>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            {% endfor %}
+                                            {% else %}
                                             <li class="list-group-item">
                                                 <div class="row">
                                                     <div class="col-4">
                                                         <h5>account</h5>
                                                     </div>
                                                     <div class="col-4">
-                                                        <h5>12/05/24</h5>
+                                                        <h5>none</h5>
                                                     </div>
                                                     <div class="col-4">
-                                                        <h5 style="color:green">+R20,000.00</h5>
+                                                        <h5 style="color:green">+R 0.00</h5>
                                                     </div>
                                                 </div>
                                             </li>
+                                            {% endif %}
                                           </ul>
                                         <h3>Deductions</h3>
                                         <ul class="list-group list-group-flush">
+                                            {% if purchases | length != 0 %}
+                                            {% for purchase in purchases %}
                                             <li class="list-group-item">
                                                 <div class="row">
                                                     <div class="col-4">
                                                         <h5>account</h5>
                                                     </div>
                                                     <div class="col-4">
-                                                        <h5>20/05/24</h5>
+                                                        <h5>{{purchase.created_at}}</h5>
                                                     </div>
                                                     <div class="col-4">
-                                                        <h5 style="color:red">-R10,000.00</h5>
+                                                        <h5 style="color:red">-R{{(purchase.value | int)}}</h5>
                                                     </div>
                                                 </div>
                                             </li>
+                                            {% endfor %}
+                                            {% else %}
+                                            <li class="list-group-item">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <h5>account</h5>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <h5>none</h5>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <h5 style="color:red">R 0.00</h5>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            {% endif %}
                                         </ul>
                                     </div>
                                 </div>
@@ -229,35 +312,6 @@
 
         </div>
         <!-- End of Content Wrapper -->
-        <!-- view portfolio modal -->
-        <div class="modal fade" id="topUpModal" tabindex="-1" aria-labelledby="topUpModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Account top up</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form method="POST" action="">
-                <div class="modal-body">
-                    <div class="form-floating">
-                        <select name="type" class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                          <option selected>account</option>
-                          <option value="1">savings</option>
-                        </select>
-                        <label for="floatingSelect">Description</label>
-                    </div>
-                    <br />
-                    <div class="form-floating mb-3">
-                        <input type="number" name="amount" class="form-control" id="floatingInput" placeholder="R0.00">
-                        <label for="floatingInput">Amount</label>
-                    </div>
-
-                    <button type="submit" class="btn btn-dark">Add</button>
-                </div>
-                </form>
-            </div>
-            </div>
-        </div>
     </div>
     <!-- End of Page Wrapper -->
 

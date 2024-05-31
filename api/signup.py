@@ -14,7 +14,7 @@ def company_signup(email, password):
     #check if user exists in db
     company = Company.query.filter_by(email = email, password = password).first()
     if company:
-        return render_template('error.html', err='This company already exists')
+        return render_template('errors.html', err='This company already exists')
     else:
         #add info into database
         user_id = str(uni_key_gen(email))
