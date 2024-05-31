@@ -30,29 +30,30 @@
         <center>
             <img src="/static/images/FreeMarx.png" style="width:400px; height:400px;">
             <br />
+            <form method="POST" action="{{url_for('investorSignupFunction')}}">
             <div class="card" style="width:60%; border:none;">
                 <div class="card-body">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="floatingFirstname" placeholder="enter first name">
+                        <input type="text" name="firstName" class="form-control" id="floatingFirstname" placeholder="enter first name">
                         <label for="floatingFirstname">Firstname</label>
                       </div>
 
                       <div class="form-floating">
-                        <input type="text" class="form-control" id="floatingLastname" placeholder="Password">
+                        <input type="text" name="lastName" class="form-control" id="floatingLastname" placeholder="Password">
                         <label for="floatingLastname">Lastname</label>
                       </div><br />
 
                     <div class="form-floating mb-3">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com">
                         <label for="floatingInput">Email address</label>
                       </div>
 
                       <div class="form-floating">
-                        <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                        <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
                         <label for="floatingPassword">Password</label>
                       </div>
                       <br />
-                      <button class="btn btn-outline-dark" style="width:100%; border-radius:20px">login</button>
+                      <button type="submit" class="btn btn-outline-dark" style="width:100%; border-radius:20px">signup</button>
                       <div class="row">
                         <div class="col-12">
                             <p>Already have an account? <b>login</b></p>
@@ -60,6 +61,7 @@
                       </div>
                 </div>
             </div>
+            </form>
         </center>
     </div>
 </body>

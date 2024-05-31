@@ -30,21 +30,22 @@
         <center>
             <img src="/static/images/FreeMarx.png" style="width:400px; height:400px;">
             <br />
+            <form method="POST" action="{{url_for('companyLoginFunction')}}">
             <div class="card" style="width:60%; border:none;">
                 <div class="card-body">
                     <div class="form-floating mb-3">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <input type="email" class="form-control" name="email" id="floatingInput" placeholder="name@example.com">
                         <label for="floatingInput">Email address</label>
                       </div>
                       <div class="form-floating">
-                        <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                        <input type="password" class="form-control" name="password" id="floatingPassword" placeholder="Password">
                         <label for="floatingPassword">Password</label>
                       </div>
                       <br />
-                      <button class="btn btn-outline-dark" style="width:100%; border-radius:20px">login</button>
+                      <button type="submit" class="btn btn-outline-dark" style="width:100%; border-radius:20px">login</button>
                       <div class="row">
                         <div class="col-6">
-                            <p>Need an account? <b>signup</b></p>
+                            <p>Need an account? <b><a href="{{url_for('companySignupPage')}}" style="text-decoration: none;">signup</a></b></p>
                         </div>
                         <div class="col-6">
                             <p>Forgot your <b>password?</b></p>
@@ -52,6 +53,7 @@
                       </div>
                 </div>
             </div>
+            </form>
         </center>
     </div>
 </body>

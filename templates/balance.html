@@ -39,13 +39,14 @@
 <br />
 <div class="container text-center">
     <center>
+    <form method="POST" action="{{url_for('addToWallet', id=user_id)}}">
     <div class="card" style="border:none; width:60%;">
         <div class="card-body">
             <h3 class="card-title"><b>Wallet Balance</b></h3>
             <p class="card-subtitle">Add funds to continue</p>
         <br />
         <div class="form-floating">
-            <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+            <select name="type" class="form-select" id="floatingSelect" aria-label="Floating label select example">
               <option value="account" selected>account</option>
               <option value="savings">savings</option>
             </select>
@@ -53,18 +54,14 @@
         </div>
         <br />
         <div class="form-floating mb-3">
-            <input type="number" class="form-control" id="floatingInput" placeholder="R0.00">
+            <input type="number" name="amount" class="form-control" id="floatingInput" placeholder="R0.00">
             <label for="floatingInput">Amount</label>
         </div>
 
-        <div class="form-floating mb-3">
-            <input type="date" class="form-control" id="floatingInput" placeholder="12/05/24">
-            <label for="floatingInput">Date</label>
-        </div>
-
-        <button class="btn btn-outline-dark" style="width:100%;">next</button>
+        <button type="submit" class="btn btn-outline-dark" style="width:100%;">next</button>
     </div>
 </div>
+</form>
 </center>
 </div>
 

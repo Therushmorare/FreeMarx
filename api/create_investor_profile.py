@@ -14,3 +14,9 @@ def profile(file_name, bio_text, investor_id):
     db.session.add(profile_add)
     db.session.commit()
     return redirect(url_for('balanceManagement', id = investor_id))
+
+def investorP(file, bio, id):
+    profile_add = InvestorProfile(file = file, bio = bio, investor_id = id)
+    db.session.add(profile_add)
+    db.session.commit()
+    return redirect(url_for('balanceManagement', id = id))

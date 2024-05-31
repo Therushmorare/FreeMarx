@@ -1,6 +1,6 @@
 import sys
 import os
-from flask import Flask, render_template, request, url_for, redirect,send_from_directory, jsonify,session
+from flask import Flask, render_template, request, url_for, redirect,send_from_directory, jsonify,session, flash
 import sqlite3
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
@@ -17,8 +17,11 @@ from api.login import login
 from api.signup import company_signup, investor_signup
 from models.investors import Investor
 from models.company import Company
-from api.create_investor_profile import profile
+from api.create_investor_profile import profile, investorP
 from api.company_steps import company_profile
+from api.wallet import balance_create, top_up
+from queries.investor_dashboard import *
+from api.share import share_value, buyers_sentiment, sellers_sentiment
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -72,15 +75,22 @@ def balanceManagement(id):
 @app.route('/investorDashboard/<string:id>')
 def investorDashboard(id):
     user_id = id
-    return render_template('index.html', user_id = user_id)
+    entities = companies(db)
+    info = company_info(db)
+    info2 = company_info(db)
+    shares = equities(db)
+    buyers = buys(db)
+    sellers = sells(db)
+    all_vesters = investors(db)
+    return render_template('index.html', user_id = user_id, info = info, info2 = info2, entities = entities, shares = shares, buyers = buyers, sellers = sellers, all_vesters = all_vesters)
 
 @app.route('/companySteps/<string:id>')
 def companySteps(id):
     user_id = id
     return render_template('company_steps.html', user_id = user_id)
 
-@app.route('/caompanyDashboard/<string:id>')
-def caompanyDashboard(id):
+@app.route('/companyDashboard/<string:id>')
+def companyDashboard(id):
     user_id = id
     return render_template('company_dashboard.html', user_id = user_id)
 
@@ -110,7 +120,9 @@ def investorLoginFunction():
             passwordText = request.form.get('password')
             session["email"] = request.form.get("email")
             user = Investor.query.filter_by(email = emailText).first()
-            if bcrypt.check_password_hash(user.password, passwordText) is False:
+            if not user:
+                return render_template('errors.html', err='User does not exist!')
+            elif bcrypt.check_password_hash(user.password, passwordText) is False:
                 return render_template('errors.html', err='Password is incorrect!')
             result = login(emailText, passwordText)
             if result:
@@ -128,7 +140,9 @@ def companyLoginFunction():
             passwordText = request.form.get('password')
             session["email"] = request.form.get("email")
             user = Company.query.filter_by(email = emailText).first()
-            if bcrypt.check_password_hash(user.password, passwordText) is False:
+            if not user:
+                return render_template('errors.html', err='User does not exist!')
+            elif bcrypt.check_password_hash(user.password, passwordText) is False:
                 return render_template('errors.html', err='Password is incorrect!')
             result = login(emailText, passwordText)
             if result:
@@ -158,6 +172,9 @@ def investorSignupFunction():
             lastname = request.form.get('lastName')
             email = request.form.get('email')
             password = request.form.get('password')
+            if not password:
+                flash('Password must be non-empty.', 'error')
+                return redirect(url_for('investorSignupFunction'))
             #hash password
             hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
             result = investor_signup(firstname, lastname, email, hashed_password)
@@ -195,7 +212,8 @@ def createInvestorProfile(id):
             if not os.path.exists(upload_folder):
                 os.makedirs(upload_folder)
             picture.save(os.path.join(app.config['upload_folder'],picture.filename))
-            result = profile(picture.filename, bio, id)
+            img_file = picture.filename
+            result = investorP(img_file, bio, id)
             if result:
                 return result
         except OperationalError:
@@ -225,21 +243,33 @@ def companyProfileSteps(id):
 
             if not os.path.exists(upload_folder_1):
                 os.makedirs(upload_folder_1)
-            elif not os.path.exists(upload_folder_2):
+            if not os.path.exists(upload_folder_2):
                 os.makedirs(upload_folder_2)
-            elif not os.path.exists(upload_folder_3):
+            if not os.path.exists(upload_folder_3):
                 os.makedirs(upload_folder_3)
-
+            #add files to folders
+            logo_file.save(os.path.join(app.config['portfolio_folder'], logo_file.filename))
+            founder_file.save(os.path.join(app.config['founder_folder'], founder_file.filename))
+            financial_statements.save(os.path.join(app.config['statements_folder'], financial_statements.filename))
             results = company_profile(logo_file.filename, company_name, sector, industry, number_of_employees, details, founder_file.filename, address, equity_type, equity_quantity, goal, financial_statements.filename, id)
             if results:
-                #add files to folders
-                logo_file.save(os.path.join(app.config['portfolio_folder'], logo_file.filename))
-                founder_file.save(os.path.join(app.config['founder_folder'], founder_file.filename))
-                financial_statements.save(os.path.join(app.config['statements_folder'], financial_statements.filename))
                 return results
         except OperationalError:
             return render_template('errors.html', err='Could not load page')
     return redirect(url_for('companyProfileSteps', id = id))
+
+@app.route('/addToWallet/<string:id>', methods=('GET', 'POST'))
+def addToWallet(id):
+    if request.method == "POST":
+        try:
+            account_type = request.form.get('type')
+            account_amount = request.form.get('amount')
+            result = balance_create(account_type, account_amount, id)
+            if result:
+                return result
+        except OperationalError:
+            return render_template('errors.html', err='Could not load page')
+    return redirect(url_for('addToWallet', id = id))
 
 app.static_folder = 'static'
 if __name__ == "__main":

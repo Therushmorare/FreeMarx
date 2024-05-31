@@ -55,16 +55,16 @@
                 </div>
             </div>
             <div class="form-outer">
-                <form action="#">
+                <form method="POST" action="{{url_for('companyProfileSteps', id=user_id)}}" required enctype="multipart/form-data">
                     <div class="page slide-page">
                         <div class="title">Basic Info:</div>
                         <div class="field">
                             <div class="label">Company Logo</div>
-                            <input type="file" required style="line-height:40px;"/>
+                            <input type="file" name="logoFile" required style="line-height:40px;"/>
                         </div>
                         <div class="field">
                             <div class="label">Company Name</div>
-                            <input type="text" required />
+                            <input type="text" name="company_name" required />
                         </div>
 
                         <div class="field">
@@ -76,19 +76,19 @@
                         <div class="title">Company Info:</div>
                         <div class="field">
                             <div class="label">Sector</div>
-                            <input type="text" required />
+                            <input type="text" name="sector" required />
                         </div>
                         <div class="field">
                             <div class="label">Industry</div>
-                            <input type="text" required />
+                            <input type="text" name="industry" required />
                         </div>
                         <div class="field">
                             <div class="label">Number of Employees</div>
-                            <input type="Number" required />
+                            <input type="Number" name="employees" required />
                         </div>
                         <div class="field">
                             <div class="label">Company Details</div>
-                            <textarea style="width:100%;">Our company is a...</textarea>
+                            <textarea name="company_details" style="width:100%;">Our company is a...</textarea>
                         </div>
 
 
@@ -101,7 +101,7 @@
                         <div class="title">Founder's Info:</div>
                         <div class="field">
                             <div class="label">Upload founder's doc</div>
-                            <input type="file" required style="line-height:40px;"/>
+                            <input type="file" name="foundersFile" required style="line-height:40px;"/>
                         </div>
                         <div class="field btns">
                             <button class="prev-2 prev">Previous</button>
@@ -112,7 +112,7 @@
                         <div class="title">Company Address:</div>
                         <div class="field">
                             <div class="label">Location</div>
-                            <textarea style="width:100%;">Enter company address</textarea>
+                            <textarea  name="address" style="width:100%;">Enter company address</textarea>
                         </div>
                         <div class="field btns">
                             <button class="prev-3 prev">Previous</button>
@@ -124,15 +124,15 @@
                         <div class="title">Equity:</div>
                         <div class="field">
                             <div class="label">Equity Type</div>
-                            <input type="text" required />
+                            <input type="text" name="equity_type" required />
                         </div>
                         <div class="field">
                             <div class="label">Equity Number</div>
-                            <input type="number" required/>
+                            <input type="number" name="quantity" required/>
                         </div>
                         <div class="field">
                             <div class="label">Financial Goal</div>
-                            <input type="number" required/>
+                            <input type="number" name="goal" required/>
                         </div>
                         <div class="field btns">
                             <button class="prev-4 prev">Previous</button>
@@ -144,7 +144,7 @@
                         <div class="title">Financial Statements:</div>
                         <div class="field">
                             <div class="label">Upload Financials</div>
-                            <input type="file" required style="line-height:40px;"/>
+                            <input type="file" name="financial_statements" required style="line-height:40px;"/>
                         </div>
                         <div class="field btns">
                             <button class="prev-5 prev">Previous</button>

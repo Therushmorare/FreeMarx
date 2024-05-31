@@ -237,9 +237,10 @@
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Account top up</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <form method="POST" action="">
                 <div class="modal-body">
                     <div class="form-floating">
-                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                        <select name="type" class="form-select" id="floatingSelect" aria-label="Floating label select example">
                           <option selected>account</option>
                           <option value="1">savings</option>
                         </select>
@@ -247,17 +248,13 @@
                     </div>
                     <br />
                     <div class="form-floating mb-3">
-                        <input type="number" class="form-control" id="floatingInput" placeholder="R0.00">
+                        <input type="number" name="amount" class="form-control" id="floatingInput" placeholder="R0.00">
                         <label for="floatingInput">Amount</label>
                     </div>
 
-                    <div class="form-floating mb-3">
-                        <input type="date" class="form-control" id="floatingInput" placeholder="12/05/24">
-                        <label for="floatingInput">Date</label>
-                    </div>
-
-                    <button class="btn btn-dark">Add</button>
+                    <button type="submit" class="btn btn-dark">Add</button>
                 </div>
+                </form>
             </div>
             </div>
         </div>
