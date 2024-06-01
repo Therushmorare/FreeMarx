@@ -24,6 +24,9 @@ from queries.investor_dashboard import *
 from api.buy import buy_stocks
 from api.sell import sell_stocks
 from queries.company_dashboard import *
+from models.equities import EquityInfo
+from api.search import search
+from api.share_update import equity_update
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -95,7 +98,19 @@ def companySteps(id):
 @app.route('/companyDashboard/<string:id>')
 def companyDashboard(id):
     user_id = id
-    return render_template('company_dashboard.html', user_id = user_id)
+    equity = EquityInfo.query.filter_by(company_id = user_id).all()
+    info = company_info(user_id, db)
+    info2 = company_info(user_id, db)
+    return render_template('company_dashboard.html', user_id = user_id, equity = equity, info = info, info2 = info2)
+
+@app.route('/companyAccount/<string:id>')
+def companyAccount(id):
+    user_id = id
+    equity = EquityInfo.query.filter_by(company_id = user_id).all()
+    info = company_info(user_id, db)
+    info2 = company_info_two(user_id, db)
+    return render_template('company_profile.html', user_id = user_id, equity = equity, info = info, info2 = info2)
+
 
 @app.route('/buyPage/<string:id>/<string:cid>')
 def buyPage(id, cid):
@@ -352,6 +367,34 @@ def accountTopUp(id):
         except OperationalError:
             return render_template('errors.html', err='Could not load page')
     return redirect(url_for('wallet', id=id))
+
+#search handle
+@app.route('/searchCompany/<string:id>', methods=('GET', 'POST'))
+def searchCompany(id):
+    if request.method == 'POST':
+        try:
+            search_value = request.form.get('query')
+            result = search(search_value, id)
+            if result:
+                return result
+        except OperationalError:
+            return render_template('errors.html', err='Could not load page')
+    return render_template('search.html', user_id = id)
+
+#share top ups
+@app.route('/shareUpdate/<string:id>', methods=('GET', 'POST'))
+def shareUpdate(id):
+    if request.method == 'POST':
+        try:
+            type_val = request.form.get('equity_type')
+            share_val = request.form.get('quantity')
+            share_amount = request.form.get('goal')
+            result = equity_update(id, type_val, share_val, share_amount)
+            if result:
+                return result
+        except OperationalError:
+            return render_template('errors.html', err='Could not find page')
+    return redirect(url_for('companyDashboard', id=id))
 
 app.static_folder = 'static'
 if __name__ == "__main":

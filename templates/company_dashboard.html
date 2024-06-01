@@ -34,7 +34,7 @@
         <ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{url_for('investorDashboard', id=user_id)}}">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{url_for('companyDashboard', id=user_id)}}">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <img src="/static/images/FreeMarx.png" style="width:50px; height:50px; border-radius:5px;">
                 </div>
@@ -45,23 +45,9 @@
             <hr class="sidebar-divider my-0">
 
             <li class="nav-item active">
-                <a class="nav-link" href="{{url_for('investorDashboard', id=user_id)}}">
-                    <i class="fi fi-rr-chart-histogram"></i>
-                    <span>Market</span></a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="{{url_for('portfolio', id=user_id)}}">
-                    <i class="fi fi-rr-briefcase"></i>
-                    <span>Portfilio</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="{{url_for('wallet', id=user_id)}}">
-                    <i class="fi fi-rr-wallet"></i>
-                    <span>Wallet</span>
-                </a>
+                <a class="nav-link" href="{{url_for('companyDashboard', id=user_id)}}">
+                    <i class="fi fi-rr-home"></i>
+                    <span>Home</span></a>
             </li>
 
             <li class="nav-item">
@@ -73,7 +59,7 @@
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="{{url_for('account',id=user_id)}}">
+                <a class="nav-link" href="{{url_for('companyAccount',id=user_id)}}">
                     <i class="fi fi-rr-circle-user"></i>
                     <span>Account</span></a>
             </li>
@@ -100,20 +86,6 @@
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fi fi-rr-apps"></i>
                     </button>
-
-                    <!-- Topbar Search -->
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-success" type="button">
-                                    <i class="fi fi-rr-search"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -146,13 +118,11 @@
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item">
-                            {% for info in my_info %}
-                            {% for image in my_profile %}
+                            {% for data in info %}
                             <a class="nav-link" href="{{url_for('account', id = user_id)}}">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{info.first_name}}</span>
-                                <img class="img-profile rounded-circle" src="/static/Profiles/{{image.file}}">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{data.name}}</span>
+                                <img class="img-profile rounded-circle" src="/static/Portfolio/{{data.logo}}">
                             </a>
-                            {% endfor %}
                             {% endfor %}
                         </li>
                     </ul>
@@ -162,140 +132,70 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Wallet</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Share Equities</h1>
                     </div>
 
                     <div class="row">
                         <div class="col-xl-8 col-lg-7">
                             <div class="card">
-                                {% if my_wallet | length != 0 %}
-                                {% for balance in my_wallet %}
+                                {% if equity | length != 0 %}
+                                {% for balance in equity %}
                                 <div class="card-body">
                                     <i class="fi fi-rr-wallet" style="font-size:50px;"></i>
-                                    <h1><b>Balance</b></h1>
-                                    <h2><b>R {{(balance.amount|int) * -1}}</b></h2>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h5><b>Earnings</b></h5>
+                                            <h4><b>R {{(balance.goal|int)}}</b></h4>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h5><b>Per Share</b></h5>
+                                            <h4><b>R {{(balance.goal/balance.number_of_shares)|int}} per share</b></h4>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h5><b>Share Type</b></h5>
+                                                <h4><b>{{balance.type}}</b></h4>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h5><b>Num of Shares</b></h5>
+                                                <h4><b>{{balance.number_of_shares}}</b></h4>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <p>This your wallet, the balance available is what you'll use to buy your shares</p>
                                     <br />
-                                    <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#topUpModal{{balance.id}}">Top up balance</button>
                                 </div>
-                                <!-- view portfolio modal -->
-                                <div class="modal fade" id="topUpModal{{balance.id}}" tabindex="-1" aria-labelledby="topUpModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Account top up</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <form method="POST" action="{{url_for('accountTopUp', id=user_id)}}">
-                                        <div class="modal-body">
-                                            <div class="form-floating">
-                                                <select name="type" class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                                                <option value="account" selected>account</option>
-                                                <option value="savings">savings</option>
-                                                </select>
-                                                <label for="floatingSelect">Description</label>
-                                            </div>
-                                            <br />
-                                            <div class="form-floating mb-3">
-                                                <input type="number" name="amount" class="form-control" id="floatingInput" placeholder="R0.00">
-                                                <label for="floatingInput">Amount</label>
-                                            </div>
-
-                                            <button type="submit" class="btn btn-dark">Add</button>
-                                        </div>
-                                        </form>
-                                    </div>
-                                    </div>
-                                </div>
-
                                 {% endfor %}
                                 {% else %}
-                                <div class="card-body">
-                                    <i class="fi fi-rr-wallet" style="font-size:50px;"></i>
-                                    <h1><b>Balance</b></h1>
-                                    <h2><b>R 0.00</b></h2>
-                                    <p>This your wallet, the balance available is what you'll use to buy your shares</p>
-                                    <br />
-                                    <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#topUpModal">Top up balance</button>
-                                </div>
+                                <h5>No data</h5>
                                 {% endif %}
                             </div>
                         </div>
                         <div class="col-xl-4 col-lg-5">
                             <div class="card" style="border:none;">
+                                <form method="POST" action="{{url_for('shareUpdate', id=user_id)}}">
                                 <div class="card-body">
-                                    <div class="scroll">
-                                        <h3>Top up's</h3>
-                                        <ul class="list-group list-group-flush">
-                                            {% if debits | length != 0 %}
-                                            {% for debit in debits %}
-                                            <li class="list-group-item">
-                                                <div class="row">
-                                                    <div class="col-4">
-                                                        <h5>{{debit.type}}</h5>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <h5>{{debit.added_at}}</h5>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <h5 style="color:green">+R{{debit.amount}}</h5>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            {% endfor %}
-                                            {% else %}
-                                            <li class="list-group-item">
-                                                <div class="row">
-                                                    <div class="col-4">
-                                                        <h5>account</h5>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <h5>none</h5>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <h5 style="color:green">+R 0.00</h5>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            {% endif %}
-                                          </ul>
-                                        <h3>Deductions</h3>
-                                        <ul class="list-group list-group-flush">
-                                            {% if purchases | length != 0 %}
-                                            {% for purchase in purchases %}
-                                            <li class="list-group-item">
-                                                <div class="row">
-                                                    <div class="col-4">
-                                                        <h5>account</h5>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <h5>{{purchase.created_at}}</h5>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <h5 style="color:red">-R{{(purchase.value | int)}}</h5>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            {% endfor %}
-                                            {% else %}
-                                            <li class="list-group-item">
-                                                <div class="row">
-                                                    <div class="col-4">
-                                                        <h5>account</h5>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <h5>none</h5>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <h5 style="color:red">R 0.00</h5>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            {% endif %}
-                                        </ul>
+                                    <h1><b>Add Shares</b></h1>
+                                    <br />
+                                    <div class="form-floating mb-3">
+                                        <input type="text" name="equity_type" class="form-control" id="floatingInput" placeholder="share type">
+                                        <label for="floatingInput">Equity Type</label>
                                     </div>
+                                    <div class="form-floating">
+                                        <input type="number" name="quantity" class="form-control" id="floatingInput2" placeholder="number of shares">
+                                        <label for="floatingInput2">Equity Quantity</label>
+                                    </div>
+                                    <br />
+                                    <div class="form-floating">
+                                        <input type="number" name="goal" class="form-control" id="floatingInput3" placeholder="money goal">
+                                        <label for="floatingInput3">Financial Goal</label>
+                                    </div>
+                                    <br />
+                                    <button type="submit" class="btn btn-dark" style="width:100%;">update</button>
                                 </div>
+                                </form>
                             </div>
+                            <br />
                         </div>
                     </div>
                 </div>

@@ -34,7 +34,7 @@
         <ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{url_for('investorDashboard', id = user_id)}}">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{url_for('investorDashboard', id=user_id)}}">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <img src="/static/images/FreeMarx.png" style="width:50px; height:50px; border-radius:5px;">
                 </div>
@@ -45,20 +45,20 @@
             <hr class="sidebar-divider my-0">
 
             <li class="nav-item active">
-                <a class="nav-link" href="{{url_for('investorDashboard', id = user_id)}}">
+                <a class="nav-link" href="{{url_for('investorDashboard', id=user_id)}}">
                     <i class="fi fi-rr-chart-histogram"></i>
                     <span>Market</span></a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="{{url_for('portfolio', id = user_id)}}">
+                <a class="nav-link" href="{{url_for('portfolio', id=user_id)}}">
                     <i class="fi fi-rr-briefcase"></i>
                     <span>Portfilio</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="{{url_for('wallet', id = user_id)}}">
+                <a class="nav-link" href="{{url_for('wallet', id=user_id)}}">
                     <i class="fi fi-rr-wallet"></i>
                     <span>Wallet</span>
                 </a>
@@ -73,14 +73,14 @@
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="{{url_for('account', id = user_id)}}">
+                <a class="nav-link" href="{{url_for('account',id=user_id)}}">
                     <i class="fi fi-rr-circle-user"></i>
                     <span>Account</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="{{url_for('investorLogout')}}">
+                <a class="nav-link" href="{{url_for('companyLogout')}}">
                     <i class="fi fi-rr-lock-open-alt"></i>
                     <span>Logout</span></a>
             </li>
@@ -145,14 +145,10 @@
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item">
-                            {% for info in my_info %}
-                            {% for image in my_profile %}
                             <a class="nav-link" href="{{url_for('account', id = user_id)}}">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{info.first_name}}</span>
-                                <img class="img-profile rounded-circle" src="/static/Profiles/{{image.file}}">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">user</span>
+                                <img class="img-profile rounded-circle" src="/static/images/linkdin.jpg">
                             </a>
-                            {% endfor %}
-                            {% endfor %}
                         </li>
                     </ul>
                 </nav>
@@ -161,87 +157,24 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Portfolio</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Search Results</h1>
                     </div>
 
                     <div class="row">
-                        <div class="col-xl-8 col-lg-7">
-                            <ul class="list-group list-group-flush">
-                                <div class="scroll">
-                                {% if portfolio_data | length != 0 %}
-                                {% for data in portfolio_data %}
-                                {% for info_one in company_info1 %}
-                                {% if info_one.company_id == data.company_id %}
-                                <li class="list-group-item">
-                                    <div class="row">
-                                        <div class="col-4">
-                                            <img src="/static/Portfolio/{{info_one.logo}}" style="width:50px;height:50px;border-radius:5px;">
-                                        </div>
-                                        <div class="col-4">
-                                            <h3>{{info_one.name}}</h3>
-                                        </div>
-                                        <div class="col-4">
-                                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewModal{{info_one.id}}">view</button>
-                                        </div>
-                                    </div>
-                                </li>
-                                <!-- view portfolio modal -->
-                                <div class="modal fade" id="viewModal{{info_one.id}}" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="exampleModalLabel">{{info_one.name}}</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-4">Shares</div>
-                                            <div class="col-8">{{data.share_quantity}}</div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-4">Amount</div>
-                                            <div class="col-8">R{{(data.value)|int}}</div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-4">Date</div>
-                                            <div class="col-8">{{data.created_at}}</div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <button class="btn btn-outline-success" style="width:100%; border-radius:20px;">Buy more</button>
-                                            </div>
-                                            <div class="col-6">
-                                                <button class="btn btn-outline-danger" style="width:100%; border-radius:20px;">Sell</button>
-                                            </div>
-                                        </div>
-                                        <hr />
-                                        </div>
-                                    </div>
-                                    </div>
-                                </div>
-
-                                {% endif %}
-                                {% endfor %}
-                                {% endfor %}
-                                {% else %}
-                                <h5>No portfolio data</h5>
-                                {% endif %}
-                                </div>
-                            </ul>
-                        </div>
-                        <div class="col-xl-4 col-lg-5">
-                            {% for fin_info in my_wallet %}
+                        <div class="col-xl-12 col-lg-7">
+                            {% if results | length != 0 %}
+                            {% for company in results %}
                             <div class="card">
+                                <img src="/static/Portfolio/{{company.logo}}">
                                 <div class="card-body">
-                                <center>
-                                <i class="fi fi-rr-wallet" style="font-size:50px;"></i>
-                                <h1><b>R {{(fin_info.amount)|int}}</b></h1>
-                                <p>This is your current balance</p>
-                                <a href="{{url_for('wallet', id=user_id)}}" style="text-decoration:none"><button class="btn btn-outline-dark">top up wallet</button></a>
-                                </center>
+                                    <h1 class="card-title">{{company.name}}</h1>
+                                    <br />
+                                    <a href="{{url_for('view', id=user_id, cid=company.id)}}"><button class="btn btn-dark">view</button></a>
                                 </div>
                             </div>
                             {% endfor %}
+                            <h5>No search results</h5>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
